@@ -1,12 +1,13 @@
 #!/bin/bash
 
+export PGHOST="${NB_POSTGRESQL_HOST:-127.0.0.1}"
+export PGDATABASE="${NB_POSTGRESQL_DB:-pfb}"
+export PGUSER="${NB_POSTGRESQL_USER:-gis}"
+export PGPASSWORD="${NB_POSTGRESQL_PASSWORD:-gis}"
+
 NB_INPUT_SRID="${NB_INPUT_SRID:-4326}"
 NB_OUTPUT_SRID="${NB_OUTPUT_SRID:-4326}"
 NB_BOUNDARY_BUFFER="${NB_BOUNDARY_BUFFER:-0}"
-NB_POSTGRESQL_HOST="${NB_POSTGRESQL_HOST:-127.0.0.1}"
-NB_POSTGRESQL_DB="${NB_POSTGRESQL_DB:-pfb}"
-NB_POSTGRESQL_USER="${NB_POSTGRESQL_USER:-gis}"
-NB_POSTGRESQL_PASSWORD="${NB_POSTGRESQL_PASSWORD:-gis}"
 
 NB_TEMPDIR=`mktemp -d`
 
@@ -52,7 +53,7 @@ then
 
         # Import neighborhood boundary
         shp2pgsql -d -s "${NB_INPUT_SRID}":"${NB_OUTPUT_SRID}" "${NB_BOUNDARY_FILE}" neighborhood_boundary \
-            | psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}"
+            | psql
 
         # Get blocks for the state requested
         NB_BLOCK_FILENAME="tabblock2010_${NB_STATE_FIPS}_pophu"
@@ -62,12 +63,11 @@ then
         # Import block shapefile
         echo "START: Importing blocks"
         shp2pgsql -d -s 4326:"${NB_OUTPUT_SRID}" "${NB_TEMPDIR}/${NB_BLOCK_FILENAME}.shp" neighborhood_census_blocks \
-            | psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" > /dev/null
+            | psql > /dev/null
         echo "DONE: Importing blocks"
 
         # Only keep blocks in boundary+buffer
-        psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-            -c "DELETE FROM neighborhood_census_blocks AS blocks USING neighborhood_boundary AS boundary WHERE NOT ST_DWithin(blocks.geom, boundary.geom, ${NB_BOUNDARY_BUFFER});"
+        psql -c "DELETE FROM neighborhood_census_blocks AS blocks USING neighborhood_boundary AS boundary WHERE NOT ST_DWithin(blocks.geom, boundary.geom, ${NB_BOUNDARY_BUFFER});"
 
         # Remove NB_TEMPDIR
         rm -rf "${NB_TEMPDIR}"

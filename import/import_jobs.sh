@@ -1,9 +1,9 @@
 #!/bin/bash
 
-NB_POSTGRESQL_HOST="${NB_POSTGRESQL_HOST:-127.0.0.1}"
-NB_POSTGRESQL_DB="${NB_POSTGRESQL_DB:-pfb}"
-NB_POSTGRESQL_USER="${NB_POSTGRESQL_USER:-gis}"
-NB_POSTGRESQL_PASSWORD="${NB_POSTGRESQL_PASSWORD:-gis}"
+export PGHOST="${NB_POSTGRESQL_HOST:-127.0.0.1}"
+export PGDATABASE="${NB_POSTGRESQL_DB:-pfb}"
+export PGUSER="${NB_POSTGRESQL_USER:-gis}"
+export PGPASSWORD="${NB_POSTGRESQL_PASSWORD:-gis}"
 
 
 set -e
@@ -42,8 +42,7 @@ function import_job_data() {
     gunzip -c "${NB_TEMPDIR}/${NB_JOB_FILENAME}.gz" > "${NB_TEMPDIR}/${NB_JOB_FILENAME}"
 
     # Import to postgresql
-    psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-        -c "
+    psql -c "
 CREATE TABLE IF NOT EXISTS \"state_od_${NB_DATA_TYPE}_JT00_2014\" (
     w_geocode varchar(15),
     h_geocode varchar(15),
@@ -59,14 +58,12 @@ CREATE TABLE IF NOT EXISTS \"state_od_${NB_DATA_TYPE}_JT00_2014\" (
     \"SI03\" integer,
     createdate VARCHAR(32)
 );"
-    psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-        -c "TRUNCATE TABLE \"state_od_${NB_DATA_TYPE}_JT00_2014\";"
+    psql -c "TRUNCATE TABLE \"state_od_${NB_DATA_TYPE}_JT00_2014\";"
 
     # Load data
     # Dir and files must be world readable/executable for postgres to use copy command
     chmod -R 775 "${NB_TEMPDIR}"
-    psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-        -c "COPY \"state_od_${NB_DATA_TYPE}_JT00_2014\"(w_geocode, h_geocode, \"S000\", \"SA01\", \"SA02\", \"SA03\", \"SE01\", \"SE02\", \"SE03\", \"SI01\", \"SI02\", \"SI03\", createdate) FROM '${NB_TEMPDIR}/${NB_JOB_FILENAME}' DELIMITER ',' CSV HEADER;"
+    psql -c "COPY \"state_od_${NB_DATA_TYPE}_JT00_2014\"(w_geocode, h_geocode, \"S000\", \"SA01\", \"SA02\", \"SA03\", \"SE01\", \"SE02\", \"SE03\", \"SI01\", \"SI02\", \"SI03\", createdate) FROM '${NB_TEMPDIR}/${NB_JOB_FILENAME}' DELIMITER ',' CSV HEADER;"
 
     # Remove NB_TEMPDIR
     rm -rf "${NB_TEMPDIR}"

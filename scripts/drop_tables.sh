@@ -1,50 +1,30 @@
 #!/usr/bin/env bash
 
 # vars
-NB_POSTGRESQL_HOST="${NB_POSTGRESQL_HOST:-127.0.0.1}"
-NB_POSTGRESQL_DB="${NB_POSTGRESQL_DB:-pfb}"
-NB_POSTGRESQL_USER="${NB_POSTGRESQL_USER:-gis}"
-NB_POSTGRESQL_PASSWORD="${NB_POSTGRESQL_PASSWORD:-gis}"
+export PGHOST="${NB_POSTGRESQL_HOST:-127.0.0.1}"
+export PGDATABASE="${NB_POSTGRESQL_DB:-pfb}"
+export PGUSER="${NB_POSTGRESQL_USER:-gis}"
+export PGPASSWORD="${NB_POSTGRESQL_PASSWORD:-gis}"
 
 # drop old tables
 echo 'Dropping old tables'
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_ways;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_ways_intersections;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_relations_ways;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_osm_nodes;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_osm_relations;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_osm_way_classes;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_osm_way_tags;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_osm_way_types;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_ways;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_ways_vertices_pgr;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_relations_ways;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_osm_nodes;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_osm_relations;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_osm_way_classes;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_osm_way_tags;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_osm_way_types;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_osm_full_line;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_osm_full_point;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_osm_full_polygon;"
-psql -h "${NB_POSTGRESQL_HOST}" -U "${NB_POSTGRESQL_USER}" -d "${NB_POSTGRESQL_DB}" \
-  -c "DROP TABLE IF EXISTS received.neighborhood_osm_full_roads;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_ways;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_ways_intersections;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_relations_ways;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_osm_nodes;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_osm_relations;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_osm_way_classes;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_osm_way_tags;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_osm_way_types;"
+psql -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_ways;"
+psql -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_ways_vertices_pgr;"
+psql -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_relations_ways;"
+psql -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_osm_nodes;"
+psql -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_osm_relations;"
+psql -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_osm_way_classes;"
+psql -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_osm_way_tags;"
+psql -c "DROP TABLE IF EXISTS scratch.neighborhood_cycwys_osm_way_types;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_osm_full_line;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_osm_full_point;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_osm_full_polygon;"
+psql -c "DROP TABLE IF EXISTS received.neighborhood_osm_full_roads;"
